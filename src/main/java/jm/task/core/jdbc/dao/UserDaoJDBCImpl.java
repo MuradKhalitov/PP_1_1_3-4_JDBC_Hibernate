@@ -1,8 +1,8 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.config.JDBCConfig;
+import jm.task.core.jdbc.exception.DaoException;
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.service.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,19 +19,26 @@ public class UserDaoJDBCImpl implements UserDao {
         this.connection = JDBCConfig.getConnection();
     }
 
+    private static final String CREATE_USERS_TABLE_SQL = """
+            CREATE TABLE IF NOT EXISTS users (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                last_name VARCHAR(255) NOT NULL,
+                age TINYINT
+            )
+            """;
+
+    @Override
     public void createUsersTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
-                "name VARCHAR(255) NOT NULL, " +
-                "last_name VARCHAR(255) NOT NULL, " +
-                "age TINYINT)";
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sql);
-            System.out.println("Table 'users' created.");
+            statement.executeUpdate(CREATE_USERS_TABLE_SQL);
+            log.info("Table 'users' created or already exists");
         } catch (SQLException e) {
-            log.error(e.getMessage(), e);
+            log.error("Failed to create 'users' table", e);
+            throw new DaoException("Cannot create users table", e);
         }
     }
+
 
     public void dropUsersTable() {
 
