@@ -1,8 +1,8 @@
 package jm.task.core.jdbc.dao;
 
-import jm.task.core.jdbc.config.JDBCConfig;
 import jm.task.core.jdbc.exception.DaoException;
 import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class UserDaoJDBCImpl implements UserDao {
     private final Connection connection;
 
     public UserDaoJDBCImpl() {
-        this.connection = JDBCConfig.getConnection();
+        this.connection = Util.getConnection();
     }
 
     private static final String CREATE_USERS_TABLE_SQL = """
