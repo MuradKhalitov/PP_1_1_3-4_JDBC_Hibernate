@@ -1,10 +1,10 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.util.List;
@@ -25,13 +25,7 @@ public class UserDaoHibernateImpl implements UserDao {
     private static final String DELETE_ALL_USERS_HQL = "DELETE FROM User";
     private static final String GET_ALL_USERS_HQL = "FROM User";
 
-    private final SessionFactory sessionFactory;
-
-    public UserDaoHibernateImpl() {
-        this.sessionFactory = new Configuration()
-                .addAnnotatedClass(User.class)
-                .buildSessionFactory();
-    }
+    private final SessionFactory sessionFactory = Util.getSessionFactory();
 
     @Override
     public void createUsersTable() {
